@@ -178,6 +178,12 @@ filtered_SeqID = []
 filtered_Label = []
 ctr = 0
 laststop = 0
+
+#lucas alterando
+#Guarda id das sequencias excluidas para atualizar anotações depois
+seq_excluded = []
+
+
 for seq in codonSequences:  # olho: se assume que todas as sequencias tem ou não tem stopcodon no final
     # se não for assim, o corte não será bem feito e teremos sequencias de comprimento diferente
     # podendo dar erro mais na frente
@@ -188,7 +194,8 @@ for seq in codonSequences:  # olho: se assume que todas as sequencias tem ou nã
             if len(stoppos) == 1 and (stoppos[0] == nprm-1):  # last stop found
                 laststop = 1
             else:
-                # print(" stop codon ", stp, " found in frame in sequence ", alignment[ctr].id, " at positions ", stoppos[0])
+                print(" stop codon ", stp, " found in frame in sequence ", alignment[ctr].id, " at positions ", stoppos[0])
+                seq_excluded.append(alignment[ctr].id.strip())
                 stopfound = True
                 break
 
@@ -202,6 +209,9 @@ for seq in codonSequences:  # olho: se assume que todas as sequencias tem ou nã
         else:
             filtered_codonSeqs.append(seq)
     ctr += 1
+
+
+
 
 # check stop codon filtering
 
@@ -707,6 +717,14 @@ annot = {}
 # Ler o arquivo de anotações
 with open(arquivo_anotacoes, 'r') as anotacoes_file:
     for linha in anotacoes_file:
+        
+        id_seq_match = False
+        for seq in seq_excluded:
+            if seq in linha:
+                id_seq_match = True
+                break
+        if id_seq_match:
+            continue
         # Dividir a linha usando a vírgula como separador
         partes = linha.strip().split(',')  # primeira parte ID longo terminando en ACCN,
         # segunda parte o tipo atribuido pelo anotador externo
@@ -716,9 +734,10 @@ with open(arquivo_anotacoes, 'r') as anotacoes_file:
             annot['_'.join(cabecalho.split('_')[1:])
                   ] = anotacao  # new 20.11.2023
             # annot[cabecalho.split("_")[:1]] = anotacao # new 05.10.2023 / 20/10/2023 Alterado o formato do arquivo de anotações
+           
         else:
-            # print(f"A linha '{linha}' não possui o formato esperado.")
-            pass
+            print(f"A linha '{linha}' não possui o formato esperado.")
+            
 
 # Exibir o dicionário de anotações
 nAnnotSeq = len(annot)

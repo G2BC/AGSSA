@@ -1,8 +1,6 @@
-# Ambiente virtual
-venv/
 
 # Arquivos temporários do Python
-__pycache__/
+__pycache__
 *.py[cod]
 
 # Configs locais e arquivos sensíveis
@@ -10,18 +8,14 @@ __pycache__/
 .python-version
 
 # Diretórios internos específicos
-aplicacao/__pycache__/
-aplicacao/.env
+__pycache__/
+.env
 
 # Arquivos de cache e logs
 *.log
 
 # Ignorar tudo dentro de results/ e uploads/
-aplicacao/results/*
-aplicacao/uploads/*
-
-!results/.gitkeep
-!uploads/.gitkeep
-
+results
+uploads
 
 resultTests

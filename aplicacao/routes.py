@@ -5,6 +5,10 @@ import datetime
 from tasks import pre_processamento_sequencias, process_analyses, process_files_and_send_email
 from utils.file_utils import conta_quantidade_sequencias, ler_especies
 import shutil
+from hashlib import sha256 as _hash
+
+def transformToHash(input_text: str) -> str:
+    return _hash(input_text.encode()).hexdigest()
 
 aplicacao_path = os.getenv('APLICACAO_PATH')
 agua_treinamento_path = os.path.join(
@@ -28,9 +32,9 @@ def treinamento_direto():
 
         current_dir = os.getcwd()
         upload_path = os.path.join(
-            current_dir, f'uploads/{email}/{datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S")}')
+            current_dir, f'uploads/{_hash(email)}/{datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S")}')
         result_path = os.path.join(
-            current_dir, f'results/{email}/{datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S")}')
+            current_dir, f'results/{hash(email)}/{datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S")}')
 
         os.makedirs(upload_path, exist_ok=True)
         os.makedirs(result_path, exist_ok=True)
@@ -89,9 +93,9 @@ def treinamento():
 
         current_dir = os.getcwd()
         upload_path = os.path.join(
-            current_dir, f'uploads/{email}/{datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S")}')
+            current_dir, f'uploads/{hash(email)}/{datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S")}')
         result_path = os.path.join(
-            current_dir, f'results/{email}/{datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S")}')
+            current_dir, f'results/{hash(email)}/{datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S")}')
 
         os.makedirs(upload_path, exist_ok=True)
         os.makedirs(result_path, exist_ok=True)

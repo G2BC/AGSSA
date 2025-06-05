@@ -1,0 +1,50 @@
+
+services:
+  nginx:
+    image: nginx:latest
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./static:/app/static 
+    depends_on:
+      - back_end
+
+  back_end:
+    build: .
+    image: lucasdias79931/agssa
+    command: gunicorn -w 4 -b 0.0.0.0:5000 app:app
+    env_file:
+      - .env
+    volumes:
+      - ./uploads:/app/uploads
+      - ./results:/app/results
+      - db-data:/etc/data
+    restart: unless-stopped
+    depends_on:
+      - rabbitmq
+      - celery
+      
+ 
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+
+  celery:
+    build: .
+    command: celery -A app.celery worker --loglevel=info
+    volumes:
+      - ./uploads:/app/uploads
+      - ./results:/app/results
+      - db-data:/etc/data
+    restart: unless-stopped
+    depends_on:
+      - rabbitmq
+
+volumes:
+  db-data:
