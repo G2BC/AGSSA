@@ -7,6 +7,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 ENV GOLANG_VERSION=1.21.5
 ENV PATH="/usr/local/go/bin:$PATH"
 
+
 # ---------- Instala dependências de sistema ----------
 RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
