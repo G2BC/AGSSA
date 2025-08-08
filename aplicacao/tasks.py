@@ -1,8 +1,9 @@
-import datetime
-from app import celery
-import os
-import subprocess
+from extensions import celery
+import os, datetime, subprocess
 from utils.email_utils import send_email
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # Função para executar um comando e retornar a saída
 

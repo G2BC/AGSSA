@@ -54,4 +54,4 @@ COPY . .
 EXPOSE 5000
 
 # ---------- Comando para iniciar a aplicação ----------
-CMD ["python3", "-u", "routes.py"]
+CMD ["python3", "-u", "app.py"]

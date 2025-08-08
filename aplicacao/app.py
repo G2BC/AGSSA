@@ -1,21 +1,20 @@
-from flask import Flask
-from dotenv import load_dotenv
-from celery import Celery
 import os
+from dotenv import load_dotenv
+from extensions import app, celery
+import routes
+import tasks
 
-# Load environment variables
 load_dotenv()
 
-app = Flask(__name__)
-app.secret_key = 'your_secret_key'
-
+# Config Flask
+app.secret_key = os.getenv('SECRET_KEY')
 app.config['CELERY_BROKER_URL'] = os.getenv('CELERY_BROKER_URL')
 app.config['CELERY_RESULT_BACKEND'] = os.getenv('CELERY_RESULT_BACKEND')
 
-celery = Celery(app.name, broker=app.config['CELERY_BROKER_URL'])
+# Config Celery
 celery.conf.update(app.config)
-
-from routes import *
+celery.conf.broker_url = app.config['CELERY_BROKER_URL']
+celery.conf.result_backend = app.config['CELERY_RESULT_BACKEND']
 
 if __name__ == '__main__':
     app.run(debug=True)

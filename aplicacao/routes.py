@@ -1,11 +1,12 @@
 from flask import render_template, request, redirect, session, url_for, jsonify
-from app import app, celery
-import os
-import datetime
+from extensions import app, celery
 from tasks import pre_processamento_sequencias, process_analyses, process_files_and_send_email
 from utils.file_utils import conta_quantidade_sequencias, ler_especies
-import shutil
+import os, datetime, shutil
 from hashlib import sha256 as _hash
+from dotenv import load_dotenv
+
+load_dotenv()
 
 def transformToHash(input_text: str) -> str:
     return _hash(input_text.encode()).hexdigest()
