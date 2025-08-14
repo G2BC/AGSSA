@@ -13,6 +13,7 @@ load_dotenv()
 #         command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
 #     return result.stdout.strip(), result.stderr.strip(), result.returncode
 
+
 def run_command(command):
     """Executa um comando shell e retorna stdout, stderr e returncode."""
     process = subprocess.Popen(
@@ -117,7 +118,7 @@ def remove_directory(directory_path):
     try:
         now = time.time()
         one_week_ago = 7 * 24 * 60 * 60  
-        one_week_ago = 10
+        
 
         if os.path.isdir(directory_path):
             info = os.stat(directory_path)
@@ -133,7 +134,7 @@ def remove_directory(directory_path):
         raise ValueError(f"Error removing directory: {e}")
     
 @celery.task
-def remove_many_directorys():
+def remove_old_directorys():
     for folder in os.listdir(UPLOADS_PATH):
         folder_fullpath = os.path.join(UPLOADS_PATH, folder)
         remove_directory(folder_fullpath)

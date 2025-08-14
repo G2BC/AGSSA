@@ -47,7 +47,7 @@ services:
       - rabbitmq
   beat:
     build: .
-    command: celery -A beat_app beat --loglevel=info
+    command: celery -A beat_app.celery beat --loglevel=info
     restart: unless-stopped
     depends_on:
       - rabbitmq

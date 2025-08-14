@@ -1,12 +1,14 @@
-from celery.schedules import schedule
+from celery.schedules import crontab
 from extensions import celery
+import tasks  
 
-
+celery.conf.timezone = 'America/Sao_Paulo'
+celery.conf.enable_utc = False  
 
 celery.conf.beat_schedule = {
-    'remove-old-directories-every-10-seconds': {
-        'task': 'tasks.remove_many_directorys',
-        'schedule': schedule(10.0),  
-        'args': (),  
+    'remove-old-directories': {
+        'task': 'tasks.remove_old_directorys',
+        'schedule': crontab(hour=23, minute=59),  
+        'args': (),
     },
 }
