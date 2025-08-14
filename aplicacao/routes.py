@@ -1,5 +1,5 @@
 from flask import render_template, request, redirect, session, url_for, jsonify
-from extensions import app, celery
+from extensions import app, celery, aplicacao_path,agua_analise_path,agua_treinamento_path,UPLOADS_PATH,RESULTS_PATH
 from tasks import pre_processamento_sequencias, process_analyses, process_files_and_send_email
 from utils.file_utils import conta_quantidade_sequencias, ler_especies
 import os, datetime, shutil, uuid
@@ -9,13 +9,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 
-aplicacao_path = os.getenv('APLICACAO_PATH')
-agua_treinamento_path = os.path.join(aplicacao_path, 'AGUA/AGUA_treinamento.py')
-agua_analise_path = os.path.join(aplicacao_path, 'AGUA/AGUA_classificacao.py')
 
-
-UPLOADS_PATH = os.getenv("UPLOADS_PATH", os.path.join(aplicacao_path, "uploads"))
-RESULTS_PATH = os.getenv("RESULTS_PATH", os.path.join(aplicacao_path, "results"))
 
 @app.route('/')
 def index():
