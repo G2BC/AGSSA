@@ -1,8 +1,8 @@
 import os
 from dotenv import load_dotenv
 from extensions import app, celery
+import tasks  
 import routes
-import tasks
 
 load_dotenv()
 
@@ -15,6 +15,7 @@ app.config['CELERY_RESULT_BACKEND'] = os.getenv('CELERY_RESULT_BACKEND')
 celery.conf.update(app.config)
 celery.conf.broker_url = app.config['CELERY_BROKER_URL']
 celery.conf.result_backend = app.config['CELERY_RESULT_BACKEND']
+
 
 if __name__ == '__main__':
     app.run(debug=True)

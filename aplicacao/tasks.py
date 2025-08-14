@@ -1,5 +1,5 @@
-from extensions import celery
-import os, datetime, subprocess
+from extensions import celery, UPLOADS_PATH, RESULTS_PATH
+import os, datetime, subprocess, shutil, time
 from utils.email_utils import send_email
 from dotenv import load_dotenv
 
@@ -12,6 +12,7 @@ load_dotenv()
 #     result = subprocess.run(
 #         command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
 #     return result.stdout.strip(), result.stderr.strip(), result.returncode
+
 
 def run_command(command):
     """Executa um comando shell e retorna stdout, stderr e returncode."""
@@ -110,3 +111,34 @@ def process_analyses(agua_path, modelo_path, sequencias_path, result_path, infor
         return "Done"
     except Exception as e:
         raise e
+
+
+
+def remove_directory(directory_path):
+    try:
+        now = time.time()
+        one_week_ago = 7 * 24 * 60 * 60  
+        
+
+        if os.path.isdir(directory_path):
+            info = os.stat(directory_path)
+            age_seconds = now - info.st_mtime
+        else:
+            raise ValueError("The path provided is not a directory")
+
+        if age_seconds > one_week_ago:
+            shutil.rmtree(directory_path)
+        
+
+    except Exception as e:
+        raise ValueError(f"Error removing directory: {e}")
+    
+@celery.task
+def remove_old_directorys():
+    for folder in os.listdir(UPLOADS_PATH):
+        folder_fullpath = os.path.join(UPLOADS_PATH, folder)
+        remove_directory(folder_fullpath)
+
+    for folder in os.listdir(RESULTS_PATH):
+        folder_fullpath = os.path.join(RESULTS_PATH, folder)
+        remove_directory(folder_fullpath)

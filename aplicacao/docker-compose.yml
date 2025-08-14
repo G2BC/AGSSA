@@ -45,6 +45,16 @@ services:
     restart: unless-stopped
     depends_on:
       - rabbitmq
-
+  beat:
+    build: .
+    command: celery -A beat_app.celery beat --loglevel=info
+    restart: unless-stopped
+    depends_on:
+      - rabbitmq
+      - celery
+    volumes:
+      - ./uploads:/app/uploads
+      - ./results:/app/results
+      - db-data:/etc/data
 volumes:
   db-data:
