@@ -7,12 +7,21 @@
 - [Usando](#usando)
 
 
+
+## Utilizando com o docker
+
+```bash
+  docker compose up --build -d 
+```
+
+## Para utilizar sem usar o docker, segue as intruções abaixo
+
 ## [Começando](começando)
 
 Instruções para instalação e execução do projeto.
 
 
-Para utilizar sem usar o docker, segue as intruções abaixo
+
 ### Pré-requisitos
 
 O que você precisa para instalar o software e como instalá-lo.
@@ -68,8 +77,3 @@ Ao executar o projeto o mesmo será executado em <http://localhost:5000>
 
 
 
-## utiliando com o docker
-
-```bash
-  docker compose up --build -d 
-```
