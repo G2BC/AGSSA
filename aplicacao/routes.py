@@ -2,21 +2,20 @@ from flask import render_template, request, redirect, session, url_for, jsonify
 from extensions import app, celery
 from tasks import pre_processamento_sequencias, process_analyses, process_files_and_send_email
 from utils.file_utils import conta_quantidade_sequencias, ler_especies
-import os, datetime, shutil
+import os, datetime, shutil, uuid
 from hashlib import sha256 as _hash
 from dotenv import load_dotenv
 
 load_dotenv()
 
-def transformToHash(input_text: str) -> str:
-    return _hash(input_text.encode()).hexdigest()
 
 aplicacao_path = os.getenv('APLICACAO_PATH')
-agua_treinamento_path = os.path.join(
-    aplicacao_path, 'AGUA/AGUA_treinamento.py')
-agua_analise_path = os.path.join(
-    aplicacao_path, 'AGUA/AGUA_classificacao.py')
+agua_treinamento_path = os.path.join(aplicacao_path, 'AGUA/AGUA_treinamento.py')
+agua_analise_path = os.path.join(aplicacao_path, 'AGUA/AGUA_classificacao.py')
 
+
+UPLOADS_PATH = os.getenv("UPLOADS_PATH", os.path.join(aplicacao_path, "uploads"))
+RESULTS_PATH = os.getenv("RESULTS_PATH", os.path.join(aplicacao_path, "results"))
 
 @app.route('/')
 def index():
@@ -31,11 +30,11 @@ def treinamento_direto():
         email = request.form['email']
         especie = request.form['especie']
 
-        current_dir = os.getcwd()
-        upload_path = os.path.join(
-            current_dir, f'uploads/{_hash(email)}/{datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S")}')
-        result_path = os.path.join(
-            current_dir, f'results/{hash(email)}/{datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S")}')
+        current_dir = os.path.abspath(os.path.dirname(__file__))
+        dir_sequence = str(uuid.uuid4())
+
+        upload_path = os.path.join(current_dir, f'{UPLOADS_PATH}/{dir_sequence}')
+        result_path = os.path.join(current_dir, f'{RESULTS_PATH}/{dir_sequence}')
 
         os.makedirs(upload_path, exist_ok=True)
         os.makedirs(result_path, exist_ok=True)
@@ -92,11 +91,11 @@ def treinamento():
         email = request.form['email']
         especie = request.form['especie']
 
-        current_dir = os.getcwd()
-        upload_path = os.path.join(
-            current_dir, f'uploads/{hash(email)}/{datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S")}')
-        result_path = os.path.join(
-            current_dir, f'results/{hash(email)}/{datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S")}')
+        current_dir = os.path.abspath(os.path.dirname(__file__))
+        dir_sequence = str(uuid.uuid4())
+
+        upload_path = os.path.join(current_dir, f'{UPLOADS_PATH}/{dir_sequence}')
+        result_path = os.path.join(current_dir, f'{RESULTS_PATH}/{dir_sequence}')
 
         os.makedirs(upload_path, exist_ok=True)
         os.makedirs(result_path, exist_ok=True)
@@ -160,9 +159,12 @@ def analise():
         sequencias = request.files['sequencias']
         modelo = request.files['modelo']
 
-        current_dir = os.getcwd()
+        current_dir = os.path.abspath(os.path.dirname(__file__))
+        dir_sequence = str(uuid.uuid4())
+
+        
         upload_path = os.path.join(
-            current_dir, f'uploads/analises/{datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S")}')
+            current_dir, f'{UPLOADS_PATH}/analises/{dir_sequence}')
 
         os.makedirs(upload_path, exist_ok=True)
 
