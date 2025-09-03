@@ -31,11 +31,12 @@ from .Model import Model
 from .clusterizer import CLOPE, Cluster
 
 
+
 # from ete3 import Tree, TreeStyle
 
 start_time_main = time.time()
 
-"""# Caminho para as sequências
+# Caminho para as sequências
 fname = sys.argv[1]
 # Caminho do arquivo de anotações
 arquivo_anotacoes = sys.argv[2]
@@ -43,11 +44,8 @@ arquivo_anotacoes = sys.argv[2]
 output_path = sys.argv[3]
 # Nome da espécie
 especie = sys.argv[4]
-"""
-fname = '/home/lucas/workspace/AGSSA/aplicacao/fileToTest/sequencias_treinamento.fasta'
-# Caminho do arquivo de anotações
-arquivo_anotacoes = '/home/lucas/workspace/AGSSA/aplicacao/fileToTest/anotacoes.txt'
-output_path = '/home/lucas/workspace/AGSSA/aplicacao/resultTests'
+
+
 # Nome da espécie
 os.makedirs(output_path,exist_ok=True)
 

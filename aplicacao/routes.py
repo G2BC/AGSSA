@@ -1,5 +1,5 @@
 from flask import render_template, request, redirect, session, url_for, jsonify
-from extensions import app, celery, aplicacao_path,agua_analise_path,agua_treinamento_path,UPLOADS_PATH,RESULTS_PATH
+from extensions import app, celery, aplicacao_path,AGSSA_analise_path,AGSSA_treinamento_path,UPLOADS_PATH,RESULTS_PATH
 from tasks import pre_processamento_sequencias, process_analyses, process_files_and_send_email
 from utils.file_utils import conta_quantidade_sequencias, ler_especies
 import os, datetime, shutil, uuid
@@ -65,9 +65,9 @@ def treinamento_direto():
             f.write(
                 f'Quantidade de sequências enviadas: {quantidade_sequencias_enviadas}\n')
 
-        # Enviar tarefa de execução do AGUA e envio de e-mail para o Celery
+        # Enviar tarefa de execução do AGSSA e envio de e-mail para o Celery
         task = process_files_and_send_email.delay(
-            agua_treinamento_path, sequencia_path, anotacoes_path, result_path, email, especie, informacoes_processamento_path)
+            AGSSA_treinamento_path, sequencia_path, anotacoes_path, result_path, email, especie, informacoes_processamento_path)
 
         session['upload_success'] = True
 
@@ -135,9 +135,9 @@ def treinamento():
             f.write(
                 f'Quantidade de sequências processadas: {quantidade_sequencias_processadas}\n')
 
-        # Enviar tarefa de execução do AGUA e envio de e-mail para o Celery
+        # Enviar tarefa de execução do AGSSA e envio de e-mail para o Celery
         task = process_files_and_send_email.delay(
-            agua_treinamento_path, sequencia_preprocessadas_path, anotacoes_path, result_path, email, especie, informacoes_processamento_path)
+            AGSSA_treinamento_path, sequencia_preprocessadas_path, anotacoes_path, result_path, email, especie, informacoes_processamento_path)
 
         session['upload_success'] = True
 
@@ -190,9 +190,9 @@ def analise():
             f.write(
                 f'Quantidade de sequências analisadas: {quantidade_sequencias_enviadas}\n')
 
-        # Enviar tarefa de execução do AGUA e envio de e-mail para o Celery
+        # Enviar tarefa de execução do AGSSA e envio de e-mail para o Celery
         task = process_analyses.delay(
-            agua_analise_path, modelo_path, sequencia_path, upload_path, informacoes_processamento_path)
+            AGSSA_analise_path, modelo_path, sequencia_path, upload_path, informacoes_processamento_path)
 
         return redirect(url_for('index'))
 

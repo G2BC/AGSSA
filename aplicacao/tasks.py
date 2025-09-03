@@ -29,10 +29,10 @@ def pre_processamento_sequencias(sequencia_path, anotacoes_path, especie):
         aplicacao_path, 'database/sequencia_referencia')
     try:
         # Caminhos dos scripts
-        script1 = 'AGUA/pre-processamento/01_remover_sequencias_duplicadas.py'
-        script2 = 'AGUA/pre-processamento/02_alinhar_sequencias.py'
-        script3 = 'AGUA/pre-processamento/03_filtrar_sequencias_ruins.py'
-        script4 = 'AGUA/pre-processamento/04_filtrar_anotacoes.py'
+        script1 = 'AGSSA/pre-processamento/01_remover_sequencias_duplicadas.py'
+        script2 = 'AGSSA/pre-processamento/02_alinhar_sequencias.py'
+        script3 = 'AGSSA/pre-processamento/03_filtrar_sequencias_ruins.py'
+        script4 = 'AGSSA/pre-processamento/04_filtrar_anotacoes.py'
 
         # Caminho do arquivo de referência
         referencia = os.path.join(referencia_path, f'{especie}.fasta')
@@ -79,9 +79,9 @@ def pre_processamento_sequencias(sequencia_path, anotacoes_path, especie):
 
 
 @celery.task
-def process_files_and_send_email(agua_path, sequencia_path, anotacoes_path, result_path, email, especie, informacoes_path):
+def process_files_and_send_email(AGSSA_path, sequencia_path, anotacoes_path, result_path, email, especie, informacoes_path):
     try:
-        command = f'python3 {agua_path} {sequencia_path} {anotacoes_path} {result_path} {especie}'
+        command = f'python3 -m {AGSSA_path} {sequencia_path} {anotacoes_path} {result_path} {especie}'
         os.system(command)
 
         with open(informacoes_path, 'a') as f:
@@ -99,9 +99,9 @@ def process_files_and_send_email(agua_path, sequencia_path, anotacoes_path, resu
 
 
 @celery.task
-def process_analyses(agua_path, modelo_path, sequencias_path, result_path, informacoes_path):
+def process_analyses(AGSSA_path, modelo_path, sequencias_path, result_path, informacoes_path):
     try:
-        command = f'python3 {agua_path} {modelo_path} {sequencias_path} {result_path}'
+        command = f'python3 {AGSSA_path} {modelo_path} {sequencias_path} {result_path}'
         os.system(command)
 
         with open(informacoes_path, 'a') as f:
