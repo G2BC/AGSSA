@@ -26,6 +26,9 @@ from Bio.Phylo.TreeConstruction import DistanceMatrix, DistanceTreeConstructor
 from Bio.Phylo.BaseTree import Clade as Clade
 from Bio.Phylo.BaseTree import Tree as BioTree
 from collections import defaultdict
+from .Untils_treinamento import UtilsTreinamento 
+from . import Model 
+
 
 # from ete3 import Tree, TreeStyle
 
@@ -40,6 +43,14 @@ output_path = sys.argv[3]
 # Nome da espécie
 especie = sys.argv[4]
 
+"""fname = '/home/lucas/workspace/AGSSA/aplicacao/results/47e1f271-beea-413d-89a3-1340c5c41c70/sequencias_tratadas.fasta'
+# Caminho do arquivo de anotações
+arquivo_anotacoes = '/home/lucas/workspace/AGSSA/aplicacao/results/47e1f271-beea-413d-89a3-1340c5c41c70/anotacoes.txt'
+output_path = '/home/lucas/test/others/result'
+# Nome da espécie
+os.makedirs(output_path,exist_ok=True)
+
+especie ='spike'"""
 
 # FASE 1 - PREPROCESSAMENTO
 # # LEITURA DO DATASET DE TREINAMENTO & IDENTIFICAÇÃO/CODIFICAÇÃO DE CLASSES PRIMÁRIAS
@@ -112,37 +123,6 @@ for strain in alignment:
 Nseqs = len(sequences)
 # print("number of non-redundant accessions in the alignment", Nseqs, " (# replicated: ", ctrdup, ")")
 
-
-def nucleotideToCodon(tripleNucleotides):
-
-    codonNumber = 0  # 0 to 63
-
-    for p in range(3):
-        if ("AGCTagct".find(tripleNucleotides[p]) != -1):
-            codonNumber += base[p] * nucleotides[tripleNucleotides[p]]
-        else:
-            if tripleNucleotides[p] == "-":
-                codonNumber = 64  # codon com pelo menos 1
-            elif tripleNucleotides[p] == "n" or tripleNucleotides[p] == "N":
-                codonNumber = 65  # codon com pelo menos 1 N
-            else:
-                codonNumber = 66  # codon com caractere IUPAC
-            break
-
-    # debb
-#     if codonNumber in stopnmb:
-#         #print("codon ",codonNumber," found in sequence")
-
-    return codonNumber
-
-
-def nucleotideSequenceToCodons(sequence):
-
-    tripleNucleotidesList = [sequence[i:i + 3]
-                             for i in range(0, len(sequence), 3)]
-
-    return list(map(lambda triple: nucleotideToCodon(triple), tripleNucleotidesList))
-
 # transformando sequencias de nucleotideos a codons
 
 
@@ -163,8 +143,12 @@ else:
 
 start = time.time()
 
-codonSequences = list(
-    map(lambda seq: nucleotideSequenceToCodons(seq), sequences))
+
+
+
+codonSequences = [UtilsTreinamento.nucleotideSequenceToCodons(base = base, nucleotides = nucleotides, sequence = seq) for seq in sequences]
+
+
 
 # print(f"Transformação concluída em {(time.time() - start) / 60} minutos")
 
