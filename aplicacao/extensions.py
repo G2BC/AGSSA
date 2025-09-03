@@ -9,10 +9,9 @@ app = Flask(__file__)
 celery = Celery()
 
 
-
 aplicacao_path = os.getenv('APLICACAO_PATH')
-agua_treinamento_path = os.path.join(aplicacao_path, 'AGUA/AGUA_treinamento.py')
-agua_analise_path = os.path.join(aplicacao_path, 'AGUA/AGUA_classificacao.py')
+AGSSA_treinamento_path = 'AGSSA.treinamento.AGSSA_treinamento'
+AGSSA_analise_path = os.path.join(aplicacao_path, 'AGSSA/AGSSA_classificacao.py')
 
 
 UPLOADS_PATH = os.getenv("UPLOADS_PATH", os.path.join(aplicacao_path, "uploads"))
