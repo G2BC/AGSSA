@@ -145,6 +145,8 @@ class UtilsTreinamento:
             WM.append(x[i] * w[i]/m)
         return WM
 
+
+    # calcula a distancia entre 2 vetores categóricos:
     @staticmethod
     def categoricaldist(u, v, var, mode=0):
     # numero de entradas distintas / total de entradas
@@ -159,6 +161,9 @@ class UtilsTreinamento:
 
         return dist/len(u)
     
+
+
+    # Função para converter um ClusterNode em Newick
     @staticmethod
     def get_newick(node, labels):
         if node.is_leaf():

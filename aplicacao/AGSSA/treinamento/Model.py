@@ -1,3 +1,6 @@
+
+# DEFINING THE CLASS OF THE THE AGUA MODEL
+
 class Model:
     def __init__(self, name="", rep=2, nmbofclasses=0, nmbofclusters=0):
 
